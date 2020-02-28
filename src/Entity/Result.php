@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,20 +19,14 @@ class Result
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $test;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $interview;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Student", inversedBy="results")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $student;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Criteria", inversedBy="results")
@@ -38,7 +34,21 @@ class Result
      */
     private $criteria;
 
-    
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Result", inversedBy="results")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $student;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Result", mappedBy="student")
+     */
+    private $results;
+
+    public function __construct()
+    {
+        $this->results = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,18 +79,6 @@ class Result
         return $this;
     }
 
-    public function getStudent(): ?Student
-    {
-        return $this->student;
-    }
-
-    public function setStudent(?Student $student): self
-    {
-        $this->student = $student;
-
-        return $this;
-    }
-
     public function getCriteria(): ?Criteria
     {
         return $this->criteria;
@@ -93,5 +91,46 @@ class Result
         return $this;
     }
 
-    
+    public function getStudent(): ?self
+    {
+        return $this->student;
+    }
+
+    public function setStudent(?self $student): self
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getResults(): Collection
+    {
+        return $this->results;
+    }
+
+    public function addResult(self $result): self
+    {
+        if (!$this->results->contains($result)) {
+            $this->results[] = $result;
+            $result->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResult(self $result): self
+    {
+        if ($this->results->contains($result)) {
+            $this->results->removeElement($result);
+            // set the owning side to null (unless already changed)
+            if ($result->getStudent() === $this) {
+                $result->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
 }

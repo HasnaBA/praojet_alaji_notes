@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -39,19 +41,25 @@ class User implements UserInterface
     private $full_name;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Quiz", mappedBy="trainer")
+     */
+    private $quizzes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Criteria", mappedBy="trainer")
+     */
+    private $criterias;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Student", mappedBy="trainer")
      */
     private $students;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Quiz", mappedBy="trainer", orphanRemoval=true)
-     */
-    private $quizzes;
-
     public function __construct()
     {
-        $this->students = new ArrayCollection();
         $this->quizzes = new ArrayCollection();
+        $this->criterias = new ArrayCollection();
+        $this->students = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,37 +153,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Student[]
-     */
-    public function getStudents(): Collection
-    {
-        return $this->students;
-    }
-
-    public function addStudent(Student $student): self
-    {
-        if (!$this->students->contains($student)) {
-            $this->students[] = $student;
-            $student->setTrainer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStudent(Student $student): self
-    {
-        if ($this->students->contains($student)) {
-            $this->students->removeElement($student);
-            // set the owning side to null (unless already changed)
-            if ($student->getTrainer() === $this) {
-                $student->setTrainer(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Quiz[]
      */
     public function getQuizzes(): Collection
@@ -200,6 +177,68 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($quiz->getTrainer() === $this) {
                 $quiz->setTrainer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Criteria[]
+     */
+    public function getCriterias(): Collection
+    {
+        return $this->criterias;
+    }
+
+    public function addCriteria(Criteria $criteria): self
+    {
+        if (!$this->criterias->contains($criteria)) {
+            $this->criterias[] = $criteria;
+            $criteria->setTrainer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCriteria(Criteria $criteria): self
+    {
+        if ($this->criterias->contains($criteria)) {
+            $this->criterias->removeElement($criteria);
+            // set the owning side to null (unless already changed)
+            if ($criteria->getTrainer() === $this) {
+                $criteria->setTrainer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Student[]
+     */
+    public function getStudents(): Collection
+    {
+        return $this->students;
+    }
+
+    public function addStudent(Student $student): self
+    {
+        if (!$this->students->contains($student)) {
+            $this->students[] = $student;
+            $student->setTrainer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): self
+    {
+        if ($this->students->contains($student)) {
+            $this->students->removeElement($student);
+            // set the owning side to null (unless already changed)
+            if ($student->getTrainer() === $this) {
+                $student->setTrainer(null);
             }
         }
 

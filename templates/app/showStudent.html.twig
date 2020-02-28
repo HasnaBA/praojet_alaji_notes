@@ -1,24 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des quiz{% endblock %}
+
+{% block title %}Liste des candidats{% endblock %}
 
 {% block body %}
 <style>
     .container {
         margin-top: 50px;
-        align-items: center;
-        justify-items: center;
+
     }
 
     h2 {
         margin-top: 100px;
-        font-size: 50px;;
-        
+        font-size: 50px;
+        text-align: center;
+
     }
+
     .content {
-        margin-top: 50px;;
+        margin-top: 50px;
+        ;
         border-style: solid;
-        width: 600px;
+        width: 800px;
         font-size: 30px;
 
     }
@@ -45,20 +48,18 @@
 
     </div>
 </nav>
+
 <div class="container">
-    
-    <h2> Liste des Quiz</h2>
-    <div class="content">
-        {% for quiz in quizzes %}
+    <h2> Résultats du Quiz "{{ quiz.name }}" </br> Candidat: {{student.fullname }}</h2>
+    <div class="content justify-content-center">
         
-        <ul>
-            <li>
-                <a href="{{ path('candidats', {
-                    'idQuiz': quiz.id, 
-                }) }}" >{{ quiz.name }}</a>
-            </li>
-        </ul>
-        {% endfor %}
+        
+        {{ form_start(formTest) }}
+        {{ form_row(formTest.criteria) }}</br>
+        {{ form_end(formTest) }}
+        
+
+
     </div>
 
 

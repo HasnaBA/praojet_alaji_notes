@@ -24,19 +24,14 @@ class Student
     private $full_name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
-    private $suspended;
+    private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatar;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $email;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="students")
@@ -45,7 +40,7 @@ class Student
     private $trainer;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Result", mappedBy="student", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Result", mappedBy="student")
      */
     private $results;
 
@@ -71,14 +66,14 @@ class Student
         return $this;
     }
 
-    public function getSuspended(): ?int
+    public function getEmail(): ?string
     {
-        return $this->suspended;
+        return $this->email;
     }
 
-    public function setSuspended(int $suspended): self
+    public function setEmail(string $email): self
     {
-        $this->suspended = $suspended;
+        $this->email = $email;
 
         return $this;
     }
@@ -91,18 +86,6 @@ class Student
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }

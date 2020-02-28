@@ -19,20 +19,14 @@ class Quiz
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quizzes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $trainer;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Result", mappedBy="criteria")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quizzes")
      */
-    private $results;
+    private $trainer;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Criteria", mappedBy="quiz")
@@ -41,25 +35,12 @@ class Quiz
 
     public function __construct()
     {
-        $this->results = new ArrayCollection();
         $this->criterias = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTrainer(): ?User
-    {
-        return $this->trainer;
-    }
-
-    public function setTrainer(?User $trainer): self
-    {
-        $this->trainer = $trainer;
-
-        return $this;
     }
 
     public function getName(): ?string
@@ -74,33 +55,14 @@ class Quiz
         return $this;
     }
 
-    /**
-     * @return Collection|Result[]
-     */
-    public function getResults(): Collection
+    public function getTrainer(): ?User
     {
-        return $this->results;
+        return $this->trainer;
     }
 
-    public function addResult(Result $result): self
+    public function setTrainer(?User $trainer): self
     {
-        if (!$this->results->contains($result)) {
-            $this->results[] = $result;
-            $result->setCriteria($this);
-        }
-
-        return $this;
-    }
-
-    public function removeResult(Result $result): self
-    {
-        if ($this->results->contains($result)) {
-            $this->results->removeElement($result);
-            // set the owning side to null (unless already changed)
-            if ($result->getCriteria() === $this) {
-                $result->setCriteria(null);
-            }
-        }
+        $this->trainer = $trainer;
 
         return $this;
     }

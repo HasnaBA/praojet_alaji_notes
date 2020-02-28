@@ -55,7 +55,10 @@
         {% for student in students %}
         <ul>
             <li>
-                <a href="#">{{ student.fullname }}</a>
+                <a href="{{ path('candidat_show', {
+                    idQuiz: quiz.id, 
+                    idCandidat: student.id
+                } )}}">{{ student.fullname }}</a>
             </li>
         </ul>
         {% endfor %}
